@@ -22,7 +22,7 @@ Next include nitro in your application.
 Somewhere near the beginning of your application (or where you want to
 begin profiling) call
 
-    timer := nitro.Initalize()
+    timer := nitro.Initialize()
 
 Then throughout your application wherever a major division of work is
 call 
