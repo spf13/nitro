@@ -92,6 +92,12 @@ func Initialize() *B {
 	return b
 }
 
+// Simple wrapper for Initialize
+// Maintain for legacy purposes
+func Initalize() *B {
+	return Initialize()
+}
+
 // Call perf.Step("step name") at each step in your
 // application you want to benchmark
 // Measures time spent since last Step call.
