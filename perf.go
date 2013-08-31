@@ -10,7 +10,7 @@
 //
 // Example:
 //	import "github.com/spf13/nitro"
-//	timer := nitro.Initalize()
+//	timer := nitro.Initialize()
 //	prepTemplates()
 //	timer.Step("initialize & template prep")
 //	CreatePages()
@@ -79,7 +79,7 @@ func (b *B) resetTimer() {
 
 // Call this first to get the performance object
 // Should be called at the top of your function.
-func Initalize() *B {
+func Initialize() *B {
 	if !*AnalysisOn {
 		return nil
 	}
@@ -90,6 +90,12 @@ func Initalize() *B {
 	b.resetTimer()
 	b.startTimer()
 	return b
+}
+
+// Simple wrapper for Initialize
+// Maintain for legacy purposes
+func Initalize() *B {
+	return Initialize()
 }
 
 // Call perf.Step("step name") at each step in your
