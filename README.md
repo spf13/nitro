@@ -25,33 +25,60 @@ begin profiling) call
     timer := nitro.Initialize()
 
 Then throughout your application wherever a major division of work is
-call 
+call
 
     timer.Step("name of step")
 
 ### Flags
 
-Nitro automatically adds a flag to your application. If you aren't already
-using flags in your application the following code is an example of how you
-may use flags. *Make sure to import "flag"*.
+Nitro automatically adds a flag to your application. If you aren't
+already using flags in your application the following code is an example
+of how you may use flags. *Make sure to import "flag"*.
 
     func main() {
         flag.Parse()
-
     }
+
+## Bring your own flags implementation
+
+If you are using your own flag system or a commander like
+[cobra](http://cobra.spf13.com) you may want to enable Nitro on your
+own. To enable Nitro without using the default flags, simply set the
+package variable '&nitro.AnalysisOn' to true. The following example uses
+a flagset:
+
+	Flags().BoolVar(&nitro.AnalysisOn, "stepAnalysis", false, "display memory and timing of different steps of the program")
+
+    var Timer *nitro.B
+
+    func init() {
+        Timer = nitro.Initalize()
+    }
+
+    func TrackMe() {
+        // a bunch of code here
+        Timer.Step("important function to track")
+    }
+
+    func TrackAnother() {
+        // more code here
+        Timer.Step("another function to track")
+    }
+
 
 ## Usage
 
-Once the library is implemented throughout your application simply run your
-application and pass the "-stepAnalysis" flag to it. It does not need to be 
-built to run, but can be called from go run or the binary form.
+Once the library is implemented throughout your application simply run
+your application and pass the "--stepAnalysis" flag to it. It does not
+need to be built to run, but can be called from go run or the binary
+form.
 
-    $ go run ./my_application -stepAnalysis
+    $ go run ./my_application --stepAnalysis
 
 ### Example output
 The following output comes from the [hugo](http://github.com/spf13/hugo) static site generator library.  Nitro was built as a component of hugo and was extracted into it's own library.
 
-    $ ./main -p spf13 -b http://localhost -d -stepAnalysis
+    $ ./main -p spf13 -b http://localhost -d --stepAnalysis
 
     initialize & template prep:
         4.664481ms (5.887625ms)	        0.43 MB 	4583 Allocs
@@ -73,7 +100,8 @@ The following output comes from the [hugo](http://github.com/spf13/hugo) static 
         8.73933ms (377.263888ms)	    0.11 MB 	1672 Allocs
 
 ## Release Notes
-
+* **0.5.0** Oct 1, 2013
+  * Now supporting non flag based enabling
 * **0.4.0** June 19, 2013
   * Implement first draft
 

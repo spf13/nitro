@@ -27,6 +27,7 @@ package nitro
 import (
 	"flag"
 	"fmt"
+	"os"
 	"runtime"
 	"time"
 )
@@ -34,7 +35,7 @@ import (
 // Used for every benchmark for measuring memory.
 var memStats runtime.MemStats
 
-var AnalysisOn = flag.Bool("stepAnalysis", false, "display memory and timing of different steps of the program")
+var AnalysisOn = false
 
 type B struct {
 	initialTime time.Time // Time entire process started
@@ -51,6 +52,10 @@ type B struct {
 }
 
 func (b *B) startTimer() {
+	if b == nil {
+		fmt.Println("ERROR: can't call startTimer on a nil value")
+		os.Exit(-1)
+	}
 	if !b.timerOn {
 		runtime.ReadMemStats(&memStats)
 		b.startAllocs = memStats.Mallocs
@@ -61,6 +66,10 @@ func (b *B) startTimer() {
 }
 
 func (b *B) stopTimer() {
+	if b == nil {
+		fmt.Println("ERROR: can't call stopTimer on a nil value")
+		os.Exit(-1)
+	}
 	if b.timerOn {
 		b.duration += time.Since(b.start)
 		runtime.ReadMemStats(&memStats)
@@ -87,9 +96,7 @@ func (b *B) resetTimer() {
 // Call this first to get the performance object
 // Should be called at the top of your function.
 func Initialize() *B {
-	if !*AnalysisOn {
-		return nil
-	}
+	flag.BoolVar(&AnalysisOn, "stepAnalysis", false, "display memory and timing of different steps of the program")
 
 	b := &B{}
 	b.initialTime = time.Now()
@@ -109,7 +116,7 @@ func Initalize() *B {
 // application you want to benchmark
 // Measures time spent since last Step call.
 func (b *B) Step(str string) {
-	if !*AnalysisOn {
+	if !AnalysisOn {
 		return
 	}
 
